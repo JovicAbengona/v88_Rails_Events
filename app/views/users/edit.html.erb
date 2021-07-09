@@ -1,0 +1,73 @@
+<div class="container-fluid my-5">
+    <div class="col-lg-6 px-5">
+        <form action="/users/<%= @user.id %>" method="POST" class="col-lg-10 row">
+            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+            <input type="hidden" name="_method" value="patch">
+            <div class="col-md-12 mb-3">
+                <% if flash[:update_success] %>
+                    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                        <strong><%= flash[:update_success] %></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <% end %>
+                <p class="display-6 text-danger">Edit Your Profile</p>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="first_name" class="form-label">First Name</label>
+                <input type="text" class="form-control" name="user[first_name]" id="first_name" placeholder="First Name" value="<%= @user.first_name %>">
+                <% if flash[:update_errors] %>
+                    <% if flash[:update_errors]["first_name"] != nil %>
+                        <p class="small text-danger fst-italic">First Name <%= flash[:update_errors]["first_name"][0] %></p>
+                    <% end %>
+                <% end %>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="last_name" class="form-label">Last Name</label>
+                <input type="text" class="form-control" name="user[last_name]" id="last_name" placeholder="Last Name" value="<%= @user.last_name %>">
+                <% if flash[:update_errors] %>
+                    <% if flash[:update_errors]["last_name"] != nil %>
+                        <p class="small text-danger fst-italic">Last Name <%= flash[:update_errors]["last_name"][0] %></p>
+                    <% end %>
+                <% end %>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="text" class="form-control" name="user[email]" id="email" placeholder="Email Address" value="<%= @user.email %>">
+                <% if flash[:update_errors] %>
+                    <% if flash[:update_errors]["email"] != nil %>
+                        <p class="small text-danger fst-italic">Email <%= flash[:update_errors]["email"][0] %></p>
+                    <% end %>
+                <% end %>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" name="user[city]" id="city" placeholder="City" value="<%= @user.city %>">
+                <% if flash[:update_errors] %>
+                    <% if flash[:update_errors]["city"] != nil %>
+                        <p class="small text-danger fst-italic">City <%= flash[:update_errors]["city"][0] %></p>
+                    <% end %>
+                <% end %>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="state" class="form-label">State</label>
+                <select class="form-select" name="user[state]" id="state">
+                <% @states.each do |state|%>
+                    <% if @user.state == state.abbreviation%>
+                        <option value="<%= state.abbreviation %>" selected><%= state.abbreviation %></option>
+                    <% else %>
+                        <option value="<%= state.abbreviation %>"><%= state.abbreviation %></option>
+                    <% end %>
+                <% end %>
+                </select>
+                <% if flash[:update_errors] %>
+                    <% if flash[:update_errors]["state"] != nil %>
+                        <p class="small text-danger fst-italic">State <%= flash[:update_errors]["state"][0] %></p>
+                    <% end %>
+                <% end %>
+            </div>
+            <div class="col-12 mb-3">
+                <button type="submit" class="btn btn-danger">Update Profile</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+<div class="container-fluid my-5">
+    <div class="row">
+        <div class="col-lg-7 p-5">
+            <h1 class="display-5 fw-bold text-danger">Welcome to DojoEvents!</h1>
+            <p class="display-5 text-secondary">Made by you. Made for you.</p>
+            <p class="col-md-8 fs-6">Manage and Join events with ease. <span class="text-danger">Secured</span> and <span class="text-danger">Reliable</span>.</p>
+        </div>
+        <div class="col-lg-5">
+            <form action="/users" method="POST" class="col-lg-10 row">
+                <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                <div class="col-md-12 mb-3">
+                    <% if flash[:reg_success] %>
+                        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                            <strong><%= flash[:reg_success] %></strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <% end %>
+                    <p class="display-6 text-danger">Register An Account</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <input type="text" class="form-control" name="user[first_name]" id="first_name" placeholder="First Name" value="<%= flash[:data_first_name] %>">
+                    <% if flash[:reg_errors] %>
+                        <% if flash[:reg_errors]["first_name"] != nil %>
+                            <p class="small text-danger fst-italic">First Name <%= flash[:reg_errors]["first_name"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <input type="text" class="form-control" name="user[last_name]" id="last_name" placeholder="Last Name" value="<%= flash[:data_last_name] %>">
+                    <% if flash[:reg_errors] %>
+                        <% if flash[:reg_errors]["last_name"] != nil %>
+                            <p class="small text-danger fst-italic">Last Name <%= flash[:reg_errors]["last_name"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <input type="text" class="form-control" name="user[email]" id="email" placeholder="Email Address" value="<%= flash[:data_email] %>">
+                    <% if flash[:reg_errors] %>
+                        <% if flash[:reg_errors]["email"] != nil %>
+                            <p class="small text-danger fst-italic">Email <%= flash[:reg_errors]["email"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <input type="text" class="form-control" name="user[city]" id="city" placeholder="City" value="<%= flash[:data_city] %>">
+                    <% if flash[:reg_errors] %>
+                        <% if flash[:reg_errors]["city"] != nil %>
+                            <p class="small text-danger fst-italic">City <%= flash[:reg_errors]["city"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <select class="form-select" name="user[state]" id="state">
+                    <% @states.each do |state|%>
+                        <% if flash[:data_state] == state.abbreviation%>
+                            <option value="<%= state.abbreviation %>" selected><%= state.abbreviation %></option>
+                        <% else %>
+                            <option value="<%= state.abbreviation %>"><%= state.abbreviation %></option>
+                        <% end %>
+                    <% end %>
+                    </select>
+                    <% if flash[:reg_errors] %>
+                        <% if flash[:reg_errors]["state"] != nil %>
+                            <p class="small text-danger fst-italic">State <%= flash[:reg_errors]["state"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <input type="password" class="form-control" name="user[password]" id="password" placeholder="Password">
+                    <% if flash[:reg_errors] %>
+                        <% if flash[:reg_errors]["password"] != nil %>
+                            <p class="small text-danger fst-italic">Password <%= flash[:reg_errors]["password"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <input type="password" class="form-control" name="user[password_confirmation]" id="password_confirmation" placeholder="Confirm Password">
+                    <% if flash[:reg_errors] %>
+                        <% if flash[:reg_errors]["password_confirmation"] != nil %>
+                            <p class="small text-danger fst-italic">Confirm Password <%= flash[:reg_errors]["password_confirmation"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-12 mb-3">
+                    <button type="submit" class="btn btn-danger">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

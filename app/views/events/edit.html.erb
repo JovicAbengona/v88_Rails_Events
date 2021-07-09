@@ -1,0 +1,66 @@
+<div class="container-fluid my-5">
+    <div class="row">
+        <div class="col-lg-6 px-5">
+            <form action="/events/<%= @event.id %>" method="POST" class="col-lg-10 row">
+                <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                <input type="hidden" name="_method" value="patch">
+                <div class="col-md-12 mb-3">
+                    <% if flash[:update_event_success] %>
+                        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                            <strong><%= flash[:update_event_success] %></strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <% end %>
+                    <p class="display-6 text-danger">Edit Your Event</p>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label for="first_name" class="form-label">Name</label>
+                    <input type="text" class="form-control" name="event[name]" id="name" placeholder="Event Name" value="<%= @event.name %>">
+                    <% if flash[:event_update_errors] %>
+                        <% if flash[:event_update_errors]["name"] != nil %>
+                            <p class="small text-danger fst-italic">First Name <%= flash[:event_update_errors]["name"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" class="form-control" name="event[date]" id="date" value="<%= @event.date %>">
+                    <% if flash[:event_update_errors] %>
+                        <% if flash[:event_update_errors]["date"] != nil %>
+                            <p class="small text-danger fst-italic">Date <%= flash[:event_update_errors]["date"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" name="event[city]" id="city" placeholder="City" value="<%= @event.city %>">
+                    <% if flash[:event_update_errors] %>
+                        <% if flash[:event_update_errors]["city"] != nil %>
+                            <p class="small text-danger fst-italic">City <%= flash[:event_update_errors]["city"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="state" class="form-label">State</label>
+                    <select class="form-select" name="event[state]" id="state">
+                    <% @states.each do |state|%>
+                        <% if @event.state == state.abbreviation%>
+                            <option value="<%= state.abbreviation %>" selected><%= state.abbreviation %></option>
+                        <% else %>
+                            <option value="<%= state.abbreviation %>"><%= state.abbreviation %></option>
+                        <% end %>
+                    <% end %>
+                    </select>
+                    <% if flash[:event_update_errors] %>
+                        <% if flash[:event_update_errors]["state"] != nil %>
+                            <p class="small text-danger fst-italic">State <%= flash[:event_update_errors]["state"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-12 mb-3">
+                    <button type="submit" class="btn btn-danger">Update Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

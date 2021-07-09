@@ -1,0 +1,209 @@
+<div class="container-fluid my-5">
+    <div class="row">
+        <% if flash[:delete_event_success] %>
+            <div class="col-lg-6 px-5">
+                <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+                    <strong><%= flash[:delete_event_success] %></strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        <% end %>
+        <% if flash[:join_success] %>
+            <div class="col-lg-6 px-5">
+                <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                    <strong><%= flash[:join_success] %></strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        <% end %>
+        <% if flash[:join_error] %>
+            <div class="col-lg-6 px-5">
+                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <strong><%= flash[:join_error] %></strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        <% end %>
+        <% if flash[:cancel_success] %>
+            <div class="col-lg-6 px-5">
+                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <strong><%= flash[:cancel_success] %></strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        <% end %>
+        <% if flash[:cancel_error] %>
+            <div class="col-lg-6 px-5">
+                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <strong><%= flash[:cancel_error] %></strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        <% end %>
+        <div class="col-lg-12 px-5">
+            <h5>Events in <span class="text-danger"><%= @state[0].name %></span></h5>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="bg-danger text-light">
+                        <tr class="d-flex">
+                            <th class="col-3">Name</th>
+                            <th class="col-2">Date</th>
+                            <th class="col-2">Location</th>
+                            <th class="col-2">Host</th>
+                            <th class="col-3">Actions/Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <% if @events_in_state.length > 0%>
+                        <% @events_in_state.each do |event|%>
+                            <tr class="d-flex">
+                                <td class="col-3"><a href="/events/<%= event.id %>" class="fw-bold text-decoration-none"><%= event.name %></a></td>
+                                <td class="col-2"><%= event.date.strftime("%B %d, %Y") %></td>
+                                <td class="col-2"><%= event.city %>, <%= event.state %></td>
+                                <td class="col-2"><%= event.user.full_name %></td>
+                                <td class="col-3">
+                                <% if event.user.id == current_user.id %>
+                                    <a href="/events/<%= event.id %>/edit" class="btn btn-sm btn-outline-dark"><i class="fas fa-edit"></i> Edit</a>
+                                    <form action="/events/<%= event.id %>" method="POST" class="d-inline">
+                                        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                                        <input type="hidden" name="_method" value="delete">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="far fa-trash-alt"></i> Delete</button>
+                                    </form>
+                                <% else %>
+                                    <% if @events_attending.any? { |key| key["id"] == event.id }%>
+                                        <p class="d-inline text-success align-middle fw-bold"><i class="fas fa-check"></i> Joined</p>
+                                        <form action="/events/<%= event.id %>/join" method="POST" class="float-end">
+                                            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                                            <input type="hidden" name="_method" value="delete">
+                                            <button type="submit" class="btn btn-sm btn-outline-dark"><i class="fas fa-times"></i> Cancel</button>
+                                        </form>
+                                    <% else %>
+                                        <form action="/events/<%= event.id %>/join" method="POST" class="d-inline">
+                                            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                                            <button type="submit" class="btn btn-sm btn-outline-primary"><i class="fas fa-check"></i> Join</button>
+                                        </form>
+                                    <% end %>
+                                <% end %>
+                                </td>
+                            </tr>
+                        <% end %>
+                    <% else %>
+                        <tr>
+                            <td colspan=5 class="text-center display-5">No Events Found</td>
+                        </tr>
+                    <% end %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-12 px-5">
+            <h5>Events in <span class="text-danger">Other States</span></h5>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="bg-danger text-light">
+                        <tr class="d-flex">
+                            <th class="col-3">Name</th>
+                            <th class="col-2">Date</th>
+                            <th class="col-2">Location</th>
+                            <th class="col-2">Host</th>
+                            <th class="col-3">Actions/Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <% if @events_in_other_state.length > 0%>
+                        <% @events_in_other_state.each do |event|%>
+                            <tr class="d-flex">
+                                <td class="col-3"><a href="/events/<%= event.id %>" class="fw-bold text-decoration-none"><%= event.name %></a></td>
+                                <td class="col-2"><%= event.date.strftime("%B %d, %Y") %></td>
+                                <td class="col-2"><%= event.city %>, <%= event.state %></td>
+                                <td class="col-2"><%= event.user.full_name %></td>
+                                <td class="col-3">
+                                <% if event.user.id == current_user.id %>
+                                    <a href="/events/<%= event.id %>/edit" class="btn btn-sm btn-outline-dark"><i class="fas fa-edit"></i> Edit</a>
+                                    <form action="/events/<%= event.id %>" method="POST" class="d-inline">
+                                        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                                        <input type="hidden" name="_method" value="delete">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="far fa-trash-alt"></i> Delete</button>
+                                    </form>
+                                <% else %>
+                                    <% if @events_attending.any? { |key| key["id"] == event.id }%>
+                                        <p class="d-inline text-success align-middle fw-bold"><i class="fas fa-check"></i> Joined</p>
+                                        <form action="/events/<%= event.id %>/join" method="POST" class="float-end">
+                                            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                                            <input type="hidden" name="_method" value="delete">
+                                            <button type="submit" class="btn btn-sm btn-outline-dark"><i class="fas fa-times"></i> Cancel</button>
+                                        </form>
+                                    <% else %>
+                                        <form action="/events/<%= event.id %>/join" method="POST" class="d-inline">
+                                            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                                            <button type="submit" class="btn btn-sm btn-outline-primary"><i class="fas fa-check"></i> Join</button>
+                                        </form>
+                                    <% end %>
+                                <% end %>
+                                </td>
+                            </tr>
+                        <% end %>
+                    <% else %>
+                        <tr>
+                            <td colspan=5 class="text-center display-5">No Events Found</td>
+                        </tr>
+                    <% end %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-12 px-5">
+            <form action="/events" method="POST" class="col-lg-4 row">
+                <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                <div class="col-lg-12 mb-3">
+                    <% if flash[:add_event_success] %>
+                        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                            <strong><%= flash[:add_event_success] %></strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <% end %>
+                    <h5>Add New Event</h5>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <input type="text" class="form-control" name="event[name]" id="name" placeholder="Event Name" value="<%= flash[:event_name] %>">
+                    <% if flash[:add_event_errors] %>
+                        <% if flash[:add_event_errors]["name"] != nil %>
+                            <p class="small text-danger fst-italic">Name <%= flash[:add_event_errors]["name"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <input type="date" class="form-control" name="event[date]" id="date" value="<%= flash[:event_date] %>">
+                    <% if flash[:add_event_errors] %>
+                        <% if flash[:add_event_errors]["date"] != nil %>
+                            <p class="small text-danger fst-italic">Date <%= flash[:add_event_errors]["date"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <input type="text" class="form-control" name="event[city]" id="city" placeholder="City" value="<%= flash[:event_city] %>">
+                    <% if flash[:add_event_errors] %>
+                        <% if flash[:add_event_errors]["city"] != nil %>
+                            <p class="small text-danger fst-italic">City <%= flash[:add_event_errors]["city"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <select class="form-select" name="event[state]" id="state">
+                    <% @states.each do |state|%>
+                        <option value="<%= state.abbreviation %>"><%= state.abbreviation %></option>
+                    <% end %>
+                    </select>
+                    <% if flash[:add_event_errors] %>
+                        <% if flash[:add_event_errors]["state"] != nil %>
+                            <p class="small text-danger fst-italic">State <%= flash[:add_event_errors]["state"][0] %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class="col-12 mb-3">
+                    <button type="submit" class="btn btn-danger">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
