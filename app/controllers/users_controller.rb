@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  skip_before_action :require_login, except: [:edit, :update]
+
   def create
     user = User.new(user_params)
 

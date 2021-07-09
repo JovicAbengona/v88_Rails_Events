@@ -191,7 +191,11 @@
                 <div class="col-md-6 mb-3">
                     <select class="form-select" name="event[state]" id="state">
                     <% @states.each do |state|%>
-                        <option value="<%= state.abbreviation %>"><%= state.abbreviation %></option>
+                        <% if flash[:event_state] == state.abbreviation %>
+                            <option value="<%= state.abbreviation %>" selected><%= state.abbreviation %></option>
+                        <% else %>
+                            <option value="<%= state.abbreviation %>"><%= state.abbreviation %></option>
+                        <% end %>
                     <% end %>
                     </select>
                     <% if flash[:add_event_errors] %>
